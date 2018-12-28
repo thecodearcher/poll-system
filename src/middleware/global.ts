@@ -4,7 +4,7 @@ import cors = require("cors");
 import { Express } from "express";
 import express = require("express");
 import logger from "morgan";
-import path from "path";
+
 export default (app: Express) => {
     app.use(cors({ maxAge: 1728000 }));
     app.use(bodyParser.urlencoded({ extended: false }));
