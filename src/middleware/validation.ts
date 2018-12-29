@@ -41,7 +41,6 @@ export default (schema: Joi.ObjectSchema) => {
                             // fetch only message and type from each error
                             details: _.map(err.details, ({ message, type }) => ({
                                 message: message.replace(/['"]/g, ""),
-                                type,
                             })),
                         },
                     };
