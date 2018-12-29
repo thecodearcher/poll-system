@@ -5,8 +5,7 @@ const port = PORT || 3000;
 app.set("port", port);
 app.listen(app.get("port"), (err) => {
     if (err) {
-        return console.error(err);
+        throw Error(err);
     }
-
     return console.log(`server is listening on ${port}`);
 });
