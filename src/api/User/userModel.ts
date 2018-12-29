@@ -1,4 +1,4 @@
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { IUser } from "./IUser";
 
 const UserSchema = new mongoose.Schema({
@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
     lastName: String,
 }, { timestamps: true });
 
-export interface IUserDocument extends IUser, Document {
+export interface IUserDocument extends IUser {
     fullName(v?: string);
     fullName(): string;
 }
@@ -33,11 +33,6 @@ class User extends mongoose.Model {
         const firstName = name.split(" ")[0];
         const lastName = firstSpace === -1 ? "" : name.substr(firstSpace + 1);
         return UserModel.findOne({ firstName });
-    }
-
-    // `getFullName()` becomes a document method
-    public getFullName() {
-        return `${this.firstName} ${this.lastName}`;
     }
 }
 
