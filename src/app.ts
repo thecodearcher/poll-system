@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
+import { pollRouter } from "./api/Poll/";
 import { userRouter } from "./api/User";
+import { voteRouter } from "./api/Vote";
 import { BASE_PATH, MONGODB_URI } from "./config";
 import { errorHandler, global } from "./middleware";
 import { logger } from "./utils/logger";
@@ -21,7 +23,9 @@ class App {
     }
 
     private mountRoutes() {
-        this.express.use(`${this.basePath}/user`, userRouter);
+        this.express.use(`${this.basePath}/users`, userRouter);
+        this.express.use(`${this.basePath}/polls`, pollRouter);
+        this.express.use(`${this.basePath}/votes`, voteRouter);
     }
 
     private registerMiddlewares() {
@@ -45,7 +49,7 @@ class App {
     // Error handlers
     private handleUncaughtErrorEvents() {
         process.on("unhandledRejection", (reason, promise) => {
-            throw reason;
+              throw reason;
         });
 
         process.on("uncaughtException", (error) => {
