@@ -6,7 +6,7 @@ import { pollRouter } from "./api/Poll/";
 import { userRouter } from "./api/User";
 import { voteRouter } from "./api/Vote";
 import { BASE_PATH, MONGODB_URI } from "./config";
-import { errorHandler, global } from "./middleware";
+import { authorized, errorHandler, global } from "./middleware";
 import { logger } from "./utils/logger";
 
 class App {
@@ -27,7 +27,7 @@ class App {
     private mountRoutes() {
         this.express.use(`${this.basePath}/auth`, authRouter);
         // this.express.use(`${this.basePath}/users`, userRouter);
-        this.express.use(passport.authenticate("jwt", { session: false }));
+        this.express.use(authorized);
         this.express.use(`${this.basePath}/polls`, pollRouter);
         this.express.use(`${this.basePath}/votes`, voteRouter);
     }
