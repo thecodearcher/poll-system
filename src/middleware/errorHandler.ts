@@ -25,10 +25,13 @@ export default (err, req, res, next) => {
         req.ip
         } - Stack: ${err.stack}`,
     );
-    err.stack = err.stack || "";
+
+    if (typeof err !== "string") {
+        err.stack = err.stack || "";
+    }
     const errorDetails = {
         status: false,
-        message: err.message,
+        message: err.message || err,
         statusCode: err.statusCode || 500,
         data: err.data,
         stack: err.stack,
