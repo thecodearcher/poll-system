@@ -1,5 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
+import passport = require("passport");
+import { authRouter } from "./api/Auth";
 import { pollRouter } from "./api/Poll/";
 import { userRouter } from "./api/User";
 import { voteRouter } from "./api/Vote";
@@ -23,7 +25,9 @@ class App {
     }
 
     private mountRoutes() {
-        this.express.use(`${this.basePath}/users`, userRouter);
+        this.express.use(`${this.basePath}/auth`, authRouter);
+        // this.express.use(`${this.basePath}/users`, userRouter);
+        this.express.use(passport.authenticate("jwt", { session: false }));
         this.express.use(`${this.basePath}/polls`, pollRouter);
         this.express.use(`${this.basePath}/votes`, voteRouter);
     }
@@ -49,7 +53,7 @@ class App {
     // Error handlers
     private handleUncaughtErrorEvents() {
         process.on("unhandledRejection", (reason, promise) => {
-              throw reason;
+            throw reason;
         });
 
         process.on("uncaughtException", (error) => {
