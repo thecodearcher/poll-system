@@ -1,38 +1,68 @@
+import bcrypt from "bcrypt";
 import mongoose, { Model } from "mongoose";
 import { IUser } from "./IUser";
-
 const UserSchema = new mongoose.Schema({
-    firstName: String,
-    lastName: String,
+    firstName: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    lastName: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    phoneNumber: {
+        type: String,
+        trim: true,
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
 }, { timestamps: true });
 
 export interface IUserDocument extends IUser {
-    fullName(v?: string);
     fullName(): string;
+    isValidPassword(v: string): Promise<boolean>;
 }
 
 export interface IUserModel extends Model<IUserDocument> {
-    findByFullName(v: string): mongoose.DocumentQuery<IUserDocument, IUserDocument>;
+    findByUsername(v: string): mongoose.DocumentQuery<IUserDocument, IUserDocument>;
 }
 
+// This is called a pre-hook, before the user information is saved in the database
+// this function will be called, we'll get the plain text password, hash it and store it.
+UserSchema.pre<IUserDocument>("save", async function(next) {
+    console.log(this.password);
+    const hash = await bcrypt.hash(this.password, 10);
+    // Replace the plain text password with the hash and then store it
+    this.password = hash;
+    next();
+});
+
 class User extends mongoose.Model {
-    // `fullName` becomes a virtual
     get fullName() {
         return `${this.firstName} ${this.lastName}`;
     }
 
-    set fullName(v) {
-        const firstSpace = v.indexOf(" ");
-        this.firstName = v.split(" ")[0];
-        this.lastName = firstSpace === -1 ? "" : v.substr(firstSpace + 1);
+    public static findByUsername(username: string) {
+        return UserModel.findOne({ username });
     }
 
-    // `findByFullName()` becomes a static
-    public static findByFullName(name: string) {
-        const firstSpace = name.indexOf(" ");
-        const firstName = name.split(" ")[0];
-        const lastName = firstSpace === -1 ? "" : name.substr(firstSpace + 1);
-        return UserModel.findOne({ firstName });
+    /**
+     * Hashes the password sent by the user for login and checks if the hashed password stored in the
+     * database matches the one sent. Returns true if it does else false.
+     *
+     * @memberof User
+     */
+    public async isValidPassword(password: string) {
+        return await bcrypt.compare(password, this.password);
     }
 }
 
