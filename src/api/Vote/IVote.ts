@@ -1,5 +1,7 @@
-export interface IVote {
-    poll: string;
-    topicId: string;
-    voter: string;
+import { IBaseInterface } from "../baseInterface";
+
+export interface IVote extends IBaseInterface {
+    poll;
+    topicId;
+    voter;
 }
