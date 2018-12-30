@@ -34,7 +34,7 @@ export class AuthController extends BaseController {
      *
      * @private
      * @param {IUser} user authenticated user
-     * @returns {string} signed token
+     * @returns {string} signed JWT
      * @memberof AuthController
      */
     private generateToken(user: IUser): string {
