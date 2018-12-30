@@ -4,6 +4,8 @@ import cors = require("cors");
 import { Express } from "express";
 import express = require("express");
 import logger from "morgan";
+import passport = require("passport");
+import { jwtStrategy } from "./passport";
 
 export default (app: Express) => {
     app.use(cors({ maxAge: 1728000 }));
@@ -15,10 +17,6 @@ export default (app: Express) => {
     app.use(express.static(`${appRoot}/dist/apidoc`));
 
     app.use(logger("dev"));
-    // app.use((req, res, next) => {
-    //     if (!req.headers.authorization) {
-    //       return res.status(403).json({ error: 'No credentials sent!' });
-    //     }
-    //     next();
-    //   });
+    passport.use(jwtStrategy);
+
 };
