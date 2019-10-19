@@ -1,9 +1,12 @@
-import { ObjectId } from "mongodb";
 import mongoose, { Model, Schema } from "mongoose";
 import { IPoll } from "./IPoll";
 
 const PollSchema = new mongoose.Schema({
     title: String,
+    user: [{
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    }],
     topics: [{
         name: {
             type: String,

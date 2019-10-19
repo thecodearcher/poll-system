@@ -15,11 +15,22 @@ export interface IVoteDocument extends IVote, Document {
 }
 
 export interface IVoteModel extends Model<IVoteDocument> {
-    findByCandidate(v: string): mongoose.DocumentQuery<IVoteDocument, IVoteDocument>;
+    findPollAggregate(): mongoose.Aggregate<any[]>;
+    findByTopic(v: string): mongoose.DocumentQuery<IVoteDocument, IVoteDocument>;
 }
 
 class Vote extends mongoose.Model {
+    public static findPollAggregate() {
+        return this.aggregate([
+            { $group: { _id: "$poll", votes: { $push: "$topicId" } } },
+            { $project: { poll: "$_id", _id: 0, votes: 1 } },
+        ])
+            .exec();
+    }
 
+    public static findByTopic(topicId: string) {
+        return this.find({ topicId: mongoose.Types.ObjectId(topicId) });
+    }
 }
 
 VoteSchema.loadClass(Vote);

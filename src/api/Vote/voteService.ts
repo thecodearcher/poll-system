@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { AppError } from "./../../utils/app-error";
 import { PollModel } from "./../Poll/pollModel";
 import { IVote } from "./IVote";
@@ -22,4 +23,16 @@ export class VoteService {
             .exec();
         return vote;
     }
+
+    public async getVotesByPoll(pollId: string) {
+        let aggregate = await VoteModel.findPollAggregate();
+        // tslint:disable-next-line:triple-equals
+        return aggregate.find((val) => val.poll == pollId);
+    }
+
+    public getVotesByTopic(topicId: string) {
+        return VoteModel.findByTopic(topicId)
+            .populate("poll", "_id title");
+    }
+
 }

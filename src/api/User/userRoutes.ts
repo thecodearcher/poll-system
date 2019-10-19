@@ -8,7 +8,7 @@ const router = express.Router();
 const call = controllerHandler;
 const User = new UserController();
 
-router.use(validation(UserValidationSchema));
+// router.use(validation(UserValidationSchema));
 
 /**
  * @api {get} /user/:id Request User information

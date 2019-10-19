@@ -16,10 +16,26 @@ router.use(validation(VoteValidationSchema));
  * @apiGroup Vote
  *
  * @apiParam {String} id Vote unique ID.
- *
- *
  */
 router.get("/:id", call(Vote.getVoteDetails, (req, res, next) => [req.params.id]));
+
+/**
+ * @api {get} /votes/poll/:id Get Poll votes
+ * @apiName GetByPoll
+ * @apiGroup Vote
+ *
+ * @apiParam {String} id Poll unique ID.
+ */
+router.get("/poll/:id", call(Vote.getPollVotes, (req, res, next) => [req.params.id]));
+
+/**
+ * @api {get} /votes/topic/:id Get Topic Votes
+ * @apiName GetTopicVotes
+ * @apiGroup Vote
+ *
+ * @apiParam {String} id topic unique ID.
+ */
+router.get("/topic/:id", call(Vote.getTopicVotes, (req, res, next) => [req.params.id]));
 
 /**
  * @api {post} /votes/ Add Vote

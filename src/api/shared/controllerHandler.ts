@@ -9,7 +9,12 @@ export const controllerHandler = (promise: Function, params) => {
     return async (req, res, next) => {
         const boundParams = params ? params(req, res, next) : [];
         try {
-            const result = await promise(...boundParams);
+            // tslint:disable-next-line:triple-equals
+            console.log(req.body, req.user);
+            if (req.body.user && req.body.user != req.user._id) {
+                return next("This user is not authorized to make this request ");
+            }
+            const result = await promise(...boundParams, req, res);
             return res.json({
                 status: true,
                 data: result.data,
